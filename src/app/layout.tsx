@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { Poppins } from "next/font/google"
 import './globals.css'
+import NavBar from '@/components/common/NavBar'
+import FooterSection from '@/components/sections/FooterSection'
 
 export const metadata: Metadata = {
   title: 'Amas Ecommerce',
@@ -17,7 +19,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={poppins.className} >{children}</body>
+      <body className={poppins.className} >
+        <main className="bg-white">
+          <NavBar />
+          {children}
+          <div className="mt-[56px]">
+            <FooterSection />
+          </div>
+        </main>
+      </body>
     </html>
   )
 }

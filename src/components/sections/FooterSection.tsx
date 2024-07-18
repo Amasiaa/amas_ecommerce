@@ -82,7 +82,7 @@ function FooterSection() {
                 </div>
                 <div>
                     <p className='text-customGray text-normal mb-[55px]'>Newletter</p>
-                    <div className='flex items-center'>
+                    <div className='flex items-center gap-3'>
                         <Input placeholder='Enter your Email Address' />
                         <div>
                             <p className='font-medium underline underline-offset-4'>

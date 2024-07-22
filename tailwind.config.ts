@@ -20,10 +20,12 @@ const config = {
     extend: {
       colors: {
         primary: "#B88E2F",
+        primaryLight: "#FAF3EA",
         customBlack: "#333333",
         customGray: "#666666",
         error: "#E97171",
-        success: "#2EC1AC"
+        success: "#2EC1AC",
+        separator: "#9F9F9F"
       },
       backgroundImage: {
         "hero": "url(/images/hero.jpg)",

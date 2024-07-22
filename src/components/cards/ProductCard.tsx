@@ -6,8 +6,10 @@ import { animate, motion } from 'framer-motion';
 import MainButton from '@/components/common/MainButton';
 import { Scada } from 'next/font/google';
 import { Scale } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 interface IProps {
+    id: string,
     imageUrl: string;
     title: string;
     description: string;
@@ -20,6 +22,7 @@ interface IProps {
 
 
 function ProductCard({
+    id,
     imageUrl,
     title,
     description,
@@ -29,7 +32,7 @@ function ProductCard({
     typeValue,
 }: IProps) {
     const [hover, setHover] = useState(false);
-    const [showOverlay, setShowOverlay] = useState(false);
+    const router = useRouter();
     const icons = [
         {
             iconUrl: "/images/share_icon.png",
@@ -38,8 +41,10 @@ function ProductCard({
         },
         {
             iconUrl: "/images/compare_icon.png",
-            title: "Compare",
-            action: () => { }
+            title: "View",
+            action: () => { 
+                router.push(`/shop/product/${id}`)
+            }
         },
         {
             iconUrl: "/images/like_icon.png",
@@ -110,9 +115,12 @@ function ProductCard({
                     </div>
                     <div className='flex justify-between mt-[24px] gap-4'>
                         {icons.map((icon, index) => (
-                            <div className='flex items-center gap-1' key={index}>
+                            <div 
+                                className='flex items-center gap-1 hover:cursor-pointer' 
+                                key={index}
+                                onClick={icon.action}>
                                 <div>
-                                    <img src={icon.iconUrl} alt='icon' />
+                                    <img src={icon.iconUrl} alt='icon'/>
                                 </div>
                                 <p className='text-white'>{icon.title}</p>
                             </div>

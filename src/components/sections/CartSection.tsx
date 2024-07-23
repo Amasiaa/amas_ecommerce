@@ -1,5 +1,6 @@
 import { Separator } from '@radix-ui/react-separator'
 import React, { useEffect, useState } from 'react'
+import MainButton from '../common/MainButton';
 
 function CartSection({ toggleShowCart }: { toggleShowCart: () => void }) {
     const [products, setProducts] = useState([
@@ -8,20 +9,25 @@ function CartSection({ toggleShowCart }: { toggleShowCart: () => void }) {
             productImageUrl: "/images/sofa.png",
             productName: "Asgaard sofa",
             quantity: 1,
-            unitPrice: 250000,
+            unitPrice: 2500000,
         },
         {
             id: "2",
             productImageUrl: "/images/sofa.png",
             productName: "Casaliving Wood",
             quantity: 1,
-            unitPrice: 270000,
+            unitPrice: 2700000,
         },
     ]);
 
     const [subTotal, setSubTotal] = useState(0)
 
-    const removeProductFromCart = (product_id: number | string) => { }
+    const removeProductFromCart = (productId: number | string) => { 
+        const filteredProducts = products.filter(
+            (product) => product.id !== productId
+        );
+        setProducts(filteredProducts);
+    }
 
     const computeSubTotal = () => {
         let total = 0;
@@ -33,44 +39,61 @@ function CartSection({ toggleShowCart }: { toggleShowCart: () => void }) {
 
     useEffect(() => { computeSubTotal() }, [products]);
     return (
-        <div className='w-[417px] h-[746px] bg-white p-[30px]'>
-            <div className='flex justify-between items-center mb-[36px]'>
-                <p className='text-24 font-semibold'>Shopping Cart</p>
-                <div onClick={toggleShowCart} className='hover:cursor-pointer'>
-                    <img src='/images/cart_alt_icon.png' alt='cart icon' />
+        <div className='w-[417px] h-[746px] bg-white p-[30px] flex flex-col justify-between'>
+            <div className=''>
+                <div className='flex justify-between items-center mb-[36px]'>
+                    <p className='text-24 font-semibold'>Shopping Cart</p>
+                    <div onClick={toggleShowCart} className='hover:cursor-pointer'>
+                        <img src='/images/cart_alt_icon.png' alt='cart icon' />
+                    </div>
+                </div>
+                <Separator className='border border-separator' />
+                <div>
+                    {products.map((product, index) => {
+                        return (
+                            <div key={index} className='flex items-center gap-[32px] w-full justify-between'>
+                                <div>
+                                    <img
+                                        src={product.productImageUrl}
+                                        alt='product image'
+                                        className='w-[108px] h-[105]' />
+                                </div>
+                                <div>
+                                    <p className='text-normal'>{product.productName}</p>
+                                    <p>{product.quantity} x <span className='text-primary font-medium text-sm'>Rs. {product.unitPrice}</span></p>
+                                </div>
+                                <div onClick={() => removeProductFromCart(product.id)} className='cursor-pointer'>
+                                    <img
+                                        src="/images/delete_icon.png"
+                                        alt='close image' />
+                                </div>
+                            </div>
+                        );
+                    })}
+
+                    {products.length ===0 && (
+                        <div className='flex justify-center items-center mt-8 text-customGray'>
+                            No product in the cart...
+                        </div>
+                    )}
                 </div>
             </div>
-            <Separator className='border border-separator' />
             <div>
-                {products.map((product, index) => (
-                    <div key={index} className='flex items-center gap-[32px] w-full justify-between'>
-                        <div>
-                            <img
-                                src={product.productImageUrl}
-                                alt='product image'
-                                className='w-[108px] h-[105]'
-                            />
-                        </div>
-                        <div>
-                            <p className='text-normal'>{product.productName}</p>
-                            <p>{product.quantity} x <span className='text-primary font-medium text-sm'>Rs. {product.unitPrice}</span></p>
-                        </div>
-                        <div>
-                            <img
-                                src="/images/delete_icon.png"
-                                alt='close image'
+                <div className='flex justify-between mb-[23px]'>
+                    <p>Subtotal</p>
+                    <p className='text-primary text-normal font-semibold'>Rs. {subTotal}</p>
+                </div>
+                {subTotal ? (
+                    <div>
+                        <Separator />
+                        <div className='mt-8 flex justify-center'>
+                            <MainButton 
+                                text="Checkout" 
+                                classes='bg-white hover:bg-wihte hover:text-primary text-black border border-black rounded-[50px] h-[40px] w-[120px]' 
                             />
                         </div>
                     </div>
-                ))}
-            </div>
-            <div>
-                <p>Subtotal</p>
-                <p>{subTotal}</p>
-            </div>
-            <Separator />
-            <div>
-
+                ): (<div></div>)}
             </div>
         </div>
     )

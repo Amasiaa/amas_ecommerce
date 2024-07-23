@@ -6,7 +6,6 @@ import {
     PaginationContent,
     PaginationItem,
     PaginationLink,
-    PaginationNext,
 } from "@/components/ui/pagination"
 import MainButton from '@/components/common/MainButton';
 import { MinusIcon, PlusIcon } from 'lucide-react';
@@ -29,6 +28,16 @@ function ProductDetailsShowCaseSection({ product_id, }: { product_id: string }) 
     const handleQuantityDecrement = () => {
         if (quantity === 1) return
         setquantity(quantity - 1)
+    }
+
+    const handleAddToCart = () => {
+        const productObject = {
+            id: 1,
+            productImageUrl: "/images/sofa.png",
+            productName: "Asgaard sofa",
+            quantity,
+            unitPrice: 2500000,
+        }
     }
 
     const extraDetailData = [
@@ -135,6 +144,7 @@ function ProductDetailsShowCaseSection({ product_id, }: { product_id: string }) 
                         <MainButton
                             text='Add to Cart'
                             classes='bg-white hover:bg-white text-black border border-black rounded-[15px]'
+                            action={handleAddToCart}
                         />
                     </div>
                 </div>

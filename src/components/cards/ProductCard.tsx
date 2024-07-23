@@ -70,7 +70,7 @@ function ProductCard({
 
     return (
 
-        < motion.div
+        <motion.div
             initial="initial"
             animate="initial"
             viewport={{ once: false }}

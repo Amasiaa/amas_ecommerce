@@ -5,10 +5,15 @@ import { MenuIcon, X } from "lucide-react";
 import Link from "next/link";
 import CartSection from "../sections/CartSection";
 import { RemoveScroll } from "react-remove-scroll";
+import { useAtomValue } from "jotai";
+import { cartAtom } from "@/storage/jotai";
+import { Badge } from "../ui/badge";
 
 function NavBar() {
   const [menu, setMenu] = useState(false);
   const [showCart, setshowCart] = useState(false);
+
+  const cartValue = useAtomValue(cartAtom);
   const links = [
     {
       title: "Home",
@@ -47,7 +52,8 @@ function NavBar() {
     {
       iconUrl: "/images/cart_icon.png",
       action: () => setshowCart(!showCart),
-      alt: "cart icon"
+      alt: "cart icon",
+      badgeValue: cartValue?.length
     }
   ];
   const toggleMenu = () => {
@@ -79,13 +85,22 @@ function NavBar() {
             </div>
             <div className="flex items-center gap-[40px] select-none">
               {icons.map((icon, index) => (
-                <img
-                  src={icon.iconUrl}
-                  onClick={icon.action}
-                  alt={icon.alt}
-                  key={index}
-                  className="cursor-pointer"
-                />
+                <div key={index} className="relative">
+                  <img
+                    src={icon.iconUrl}
+                    onClick={icon.action}
+                    alt={icon.alt}
+                    className="cursor-pointer"
+                  />
+                  {icon?.badgeValue ? (
+                    <Badge variant="destructive" className="absolute -top-3 -right-5">
+                      {icon?.badgeValue}
+                    </Badge>
+                  ) : (
+                    <div></div>
+                  )}
+                </div>
+
               ))}
             </div>
           </div>

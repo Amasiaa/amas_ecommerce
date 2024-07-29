@@ -1,50 +1,10 @@
 import ProductCard from '@/components/cards/ProductCard'
 import MainButton from '@/components/common/MainButton'
+import { PRODUCTS } from '@/lib/constants'
 import React from 'react'
 
 function ProductDetailsRelatedSection() {
- const data = [
-        {
-            id: "1",
-            imageUrl: "/images/p_1.png",
-            title: "Syltherine",
-            description: "Stylish cafe chaire",
-            price: "2.500.000",
-            otherPrice: "3.500.000",
-            type: "DISCOUNTED",
-            typeValue: "-30%"
-        },
-        {
-            id: "2",
-            imageUrl: "/images/p_2.png",
-            title: "Leviosa",
-            description: "Stylish cafe chaire",
-            price: "2.500.000",
-            otherPrice: "3.500.000",
-            type: "DISCOUNTED",
-            typeValue: "-30%"
-        },
-        {
-            id: "3",
-            imageUrl: "/images/p_3.png",
-            title: "Lolito",
-            description: "Luxury big sofa",
-            price: "7.000.000",
-            otherPrice: "14.000.000",
-            type: "DISCOUNTED",
-            typeValue: "-50%"
-        },
-        {
-            id: "4",
-            imageUrl: "/images/p_4.png",
-            title: "Respira",
-            description: "Outdoor bar table stool",
-            price: "500.000",
-            otherPrice: "",
-            type: "NEW",
-            typeValue: "New"
-        },
-    ]
+    const data = PRODUCTS.slice(12);
     return (
         <section className='w-full overflow-x-hidden'>
             <div>

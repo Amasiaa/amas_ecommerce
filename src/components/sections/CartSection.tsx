@@ -1,28 +1,19 @@
+"use client";
+
 import { Separator } from '@radix-ui/react-separator'
 import React, { useEffect, useState } from 'react'
 import MainButton from '../common/MainButton';
+import { useAtom } from 'jotai';
+import { cartAtom } from '@/storage/jotai';
+import { useRouter } from 'next/navigation';
 
 function CartSection({ toggleShowCart }: { toggleShowCart: () => void }) {
-    const [products, setProducts] = useState([
-        {
-            id: "1",
-            productImageUrl: "/images/sofa.png",
-            productName: "Asgaard sofa",
-            quantity: 1,
-            unitPrice: 2500000,
-        },
-        {
-            id: "2",
-            productImageUrl: "/images/sofa.png",
-            productName: "Casaliving Wood",
-            quantity: 1,
-            unitPrice: 2700000,
-        },
-    ]);
+    const [products, setProducts] = useAtom(cartAtom);
 
     const [subTotal, setSubTotal] = useState(0)
+    const router = useRouter();
 
-    const removeProductFromCart = (productId: number | string) => { 
+    const removeProductFromCart = (productId: number | string) => {
         const filteredProducts = products.filter(
             (product) => product.id !== productId
         );
@@ -48,7 +39,7 @@ function CartSection({ toggleShowCart }: { toggleShowCart: () => void }) {
                     </div>
                 </div>
                 <Separator className='border border-separator' />
-                <div>
+                <div className='flex flex-col gap-[20px] mt-[24px]'>
                     {products.map((product, index) => {
                         return (
                             <div key={index} className='flex items-center gap-[32px] w-full justify-between'>
@@ -56,7 +47,7 @@ function CartSection({ toggleShowCart }: { toggleShowCart: () => void }) {
                                     <img
                                         src={product.productImageUrl}
                                         alt='product image'
-                                        className='w-[108px] h-[105]' />
+                                        className='w-[108px] h-[105px] object-cover rounded-[10px]' />
                                 </div>
                                 <div>
                                     <p className='text-normal'>{product.productName}</p>
@@ -71,7 +62,7 @@ function CartSection({ toggleShowCart }: { toggleShowCart: () => void }) {
                         );
                     })}
 
-                    {products.length ===0 && (
+                    {products.length === 0 && (
                         <div className='flex justify-center items-center mt-8 text-customGray'>
                             No product in the cart...
                         </div>
@@ -87,13 +78,14 @@ function CartSection({ toggleShowCart }: { toggleShowCart: () => void }) {
                     <div>
                         <Separator />
                         <div className='mt-8 flex justify-center'>
-                            <MainButton 
-                                text="Checkout" 
-                                classes='bg-white hover:bg-wihte hover:text-primary text-black border border-black rounded-[50px] h-[40px] w-[120px]' 
+                            <MainButton
+                                text="Checkout"
+                                action={() => router.push('/checkout')}
+                                classes='bg-white hover:bg-wihte hover:text-primary text-black border border-black rounded-[50px] h-[40px] w-[120px]'
                             />
                         </div>
                     </div>
-                ): (<div></div>)}
+                ) : (<div></div>)}
             </div>
         </div>
     )

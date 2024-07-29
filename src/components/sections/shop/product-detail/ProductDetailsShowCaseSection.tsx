@@ -9,11 +9,18 @@ import {
 } from "@/components/ui/pagination"
 import MainButton from '@/components/common/MainButton';
 import { MinusIcon, PlusIcon } from 'lucide-react';
+import { PRODUCTS } from '@/lib/constants';
+import { useAtom, useSetAtom } from 'jotai';
+import { cartAtom } from '@/storage/jotai';
 
 function ProductDetailsShowCaseSection({ product_id, }: { product_id: string }) {
     const MAX_QUANTITY = 5;
     const [quantity, setquantity] = useState(1);
     const [isMounted, setisMounted] = useState(false)
+    const [cart, setCart] = useAtom(cartAtom);
+    const product = PRODUCTS.find((product) => product.id === product_id);
+
+
     const mini = [
         "/images/sofa_mini.png",
         "/images/sofa_mini.png",
@@ -31,13 +38,44 @@ function ProductDetailsShowCaseSection({ product_id, }: { product_id: string }) 
     }
 
     const handleAddToCart = () => {
-        const productObject = {
-            id: 1,
-            productImageUrl: "/images/sofa.png",
-            productName: "Asgaard sofa",
-            quantity,
-            unitPrice: 2500000,
+        const productInCart = cart.find((product) => product.id === product_id);
+        // NOTE: When we dont have the product already in the cart[EXISTING PRODUCT] *
+
+        if (productInCart) {
+            let updatedProducts = [];
+            const productObject = {
+                id: product_id,
+                productImageUrl: productInCart?.productImageUrl,
+                productName: productInCart?.productName,
+                quantity,
+                unitPrice: Number(productInCart?.unitPrice),
+            }
+
+            // NOTE: Remove it from cart & set afresh
+            const filteredProducts = cart.filter((product) => product.id !== product_id);
+            updatedProducts = filteredProducts;
+            updatedProducts.push(productObject);
+
+            setCart(updatedProducts);
         }
+
+        // NOTE: When we dont have the product already in the cart[FRESH PRODUCT] *
+
+        if (!productInCart) {
+            const product = PRODUCTS.find((product) => product.id === product_id);
+            const productObject = {
+                id: product_id,
+                productImageUrl: product?.imageUrl,
+                productName: product?.title,
+                quantity,
+                unitPrice: Number(product?.price),
+            }
+
+            setCart((prevProduct) => [...prevProduct, productObject]);
+        }
+
+
+
     }
 
     const extraDetailData = [
@@ -90,13 +128,17 @@ function ProductDetailsShowCaseSection({ product_id, }: { product_id: string }) 
                     ))}
                 </div>
                 <div className='bg-primaryLight rounded-[8px] h-[500px] items-center flex flex-col justify-center'>
-                    <img src={"/images/sofa.png"} alt='product' />
+                    <img
+                        src={product?.imageUrl}
+                        alt='product'
+                        className='w-[425px] h-[500px] object-cover rounded-[10px]'
+                    />
                 </div>
             </div>
             {/* RHS */}
             <div>
-                <p className='text-[42px]'>Asgaar sofa</p>
-                <p className='text-customGray text-24 font-medium'>Rs. 250,000.00</p>
+                <p className='text-[42px]'>{product?.title}</p>
+                <p className='text-customGray text-24 font-medium'>Rs. {product?.price}</p>
                 <div className='flex items-center gap-[22px]'>
                     <ReactStars
                         count={5}

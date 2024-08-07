@@ -23,6 +23,7 @@ import {
 
 import { Input } from "@/components/ui/input"
 import { toast } from "@/components/ui/use-toast"
+import Countries from "@/lib/json/countries.json";
 
 const FormSchema = z.object({
     firstName: z.string().min(2, {
@@ -120,18 +121,41 @@ function CheckoutBillingForm() {
                     </div>
                 </div>
                 <FormField
-                        control={form.control}
-                        name="company"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Company Name (Optional)</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Enter your Company Name" {...field} className="h-[50px]"/>
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                    control={form.control}
+                    name="company"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Company Name (Optional)</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Enter your Company Name" {...field} className="h-[50px]"/>
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="country"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Country/Region</FormLabel>
+                            <FormControl>
+                                <Select>
+                                    <SelectTrigger className="w-full"  {...field}>
+                                        <SelectValue placeholder="Select Country/Region"/>
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {Countries.map((country, index) => (
+                                            <SelectItem key={index} value={country.code}>{country.name}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                
                 <Button type="submit">Submit</Button>
             </form>
         </Form>

@@ -33,21 +33,11 @@ const FormSchema = z.object({
         message: "Last Name must be at least 2 characters.",
     }),
     company: z.string(),
-    country: z.string({
-        required_error: "Country required field",
-    }),
-    street: z.string({
-        required_error: "Street required field",
-    }),
-    town: z.string({
-        required_error: "Town required field",
-    }),
-    province: z.string({
-        required_error: "Province required field",
-    }),
-    zipcode: z.string({
-        required_error: "Zip Code required field",
-    }),
+    country: z.string().min(1, "Country required field"),
+    street: z.string().min(3, "Street required field"),
+    town: z.string().min(3, "Town required field"),
+    province: z.string().min(3, "Province required field"),
+    zipcode: z.string().min(3, "Zip Code required field"),
     phone: z.string().min(7, {
         message: "Phone must be at least 7 characters.",
     }).max(20, {
@@ -140,8 +130,11 @@ function CheckoutBillingForm() {
                         <FormItem>
                             <FormLabel>Country/Region</FormLabel>
                             <FormControl>
-                                <Select>
-                                    <SelectTrigger className="w-full"  {...field}>
+                                <Select
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value}
+                                >
+                                    <SelectTrigger className="w-full">
                                         <SelectValue placeholder="Select Country/Region"/>
                                     </SelectTrigger>
                                     <SelectContent>
@@ -155,7 +148,19 @@ function CheckoutBillingForm() {
                         </FormItem>
                     )}
                 />
-                
+                <FormField
+                    control={form.control}
+                    name="street"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Street address</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Enter your Street address" {...field} className="h-[50px]"/>
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
                 <Button type="submit">Submit</Button>
             </form>
         </Form>

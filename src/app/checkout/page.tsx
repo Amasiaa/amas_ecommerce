@@ -9,7 +9,7 @@ function CheckoutPage() {
     return (
         <div>
             <Hero title='Checkout' />
-            <div className='mx-4 md:mx-[130px]'>
+            <div className='flex flex-col md:flex-row gap-8 mx-4 md:mx-[130px] mt-[100px]'>
                 <CheckoutBillingForm />
                 <CheckoutDetailSection />
             </div>

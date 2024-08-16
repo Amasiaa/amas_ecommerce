@@ -44,6 +44,7 @@ const FormSchema = z.object({
         message: "Phone must be at least 20 characters.",
     }),
     email: z.string().email(),
+    additionalInfo: z.string(),
 
 })
 
@@ -61,6 +62,7 @@ function CheckoutBillingForm() {
             province: "",
             phone: "",
             email: "",
+            additionalInfo: "",
         },
     })
 
@@ -77,7 +79,8 @@ function CheckoutBillingForm() {
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6 pb-32">
+                <p className="font-bold text-24">Billing details</p>
                 <div className="flex gap-[31px] w-full">
                     <div className="flex-grow">
                         <FormField
@@ -161,7 +164,85 @@ function CheckoutBillingForm() {
                         </FormItem>
                     )}
                 />
-                <Button type="submit">Submit</Button>
+                <FormField
+                    control={form.control}
+                    name="town"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Town/City</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Enter your Town or city" {...field} className="h-[50px]"/>
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="province"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Province</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Enter your Province" {...field} className="h-[50px]"/>
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="zipcode"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>ZIP Code</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Enter your zip code" {...field} className="h-[50px]"/>
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="phone"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Phone</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Enter your phone" {...field} className="h-[50px]"/>
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Email address</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Enter your email address" {...field} className="h-[50px]"/>
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="additionalInfo"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Additional Information</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Additional Information" {...field} className="h-[50px]"/>
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <Button type="submit">Save Billing Info</Button>
             </form>
         </Form>
     )

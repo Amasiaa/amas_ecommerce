@@ -14,39 +14,20 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select"
 
 import { Input } from "@/components/ui/input"
 import { toast } from "@/components/ui/use-toast"
 import Countries from "@/lib/json/countries.json";
+import { BillingInfoInputValidation } from "@/lib/validations"
+import makeApiCallService from "@/lib/service/apiService"
 
-const FormSchema = z.object({
-    firstName: z.string().min(2, {
-        message: "First Name must be at least 2 characters.",
-    }),
-    lastName: z.string().min(2, {
-        message: "Last Name must be at least 2 characters.",
-    }),
-    company: z.string(),
-    country: z.string().min(1, "Country required field"),
-    street: z.string().min(3, "Street required field"),
-    town: z.string().min(3, "Town required field"),
-    province: z.string().min(3, "Province required field"),
-    zipcode: z.string().min(3, "Zip Code required field"),
-    phone: z.string().min(7, {
-        message: "Phone must be at least 7 characters.",
-    }).max(20, {
-        message: "Phone must be at least 20 characters.",
-    }),
-    email: z.string().email(),
-    additionalInfo: z.string(),
-
-})
+const FormSchema = BillingInfoInputValidation;
 
 
 function CheckoutBillingForm() {
@@ -60,21 +41,27 @@ function CheckoutBillingForm() {
             street: "",
             town: "",
             province: "",
+            zipCode: "",
             phone: "",
             email: "",
             additionalInfo: "",
         },
     })
 
-    function onSubmit(data: z.infer<typeof FormSchema>) {
-        toast({
-            title: "You submitted the following values:",
-            description: (
-                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                    <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-                </pre>
-            ),
+    async function onSubmit(data: z.infer<typeof FormSchema>) {
+        const response = makeApiCallService("/api/billing", {
+            method: "POST",
+            body: data,
         })
+        console.log(response);
+        // toast({
+        //     title: "You submitted the following values:",
+        //     description: (
+        //         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+        //             <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+        //         </pre>
+        //     ),
+        // })
     }
 
     return (
@@ -90,7 +77,7 @@ function CheckoutBillingForm() {
                                 <FormItem>
                                     <FormLabel>First Name</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Enter your First Name" {...field} className="h-[50px]"/>
+                                        <Input placeholder="Enter your First Name" {...field} className="h-[50px]" />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -105,7 +92,7 @@ function CheckoutBillingForm() {
                                 <FormItem>
                                     <FormLabel>Last Name</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Enter your Last Name" {...field} className="h-[50px]"/>
+                                        <Input placeholder="Enter your Last Name" {...field} className="h-[50px]" />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -120,7 +107,7 @@ function CheckoutBillingForm() {
                         <FormItem>
                             <FormLabel>Company Name (Optional)</FormLabel>
                             <FormControl>
-                                <Input placeholder="Enter your Company Name" {...field} className="h-[50px]"/>
+                                <Input placeholder="Enter your Company Name" {...field} className="h-[50px]" />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -138,7 +125,7 @@ function CheckoutBillingForm() {
                                     defaultValue={field.value}
                                 >
                                     <SelectTrigger className="w-full">
-                                        <SelectValue placeholder="Select Country/Region"/>
+                                        <SelectValue placeholder="Select Country/Region" />
                                     </SelectTrigger>
                                     <SelectContent>
                                         {Countries.map((country, index) => (
@@ -158,7 +145,7 @@ function CheckoutBillingForm() {
                         <FormItem>
                             <FormLabel>Street address</FormLabel>
                             <FormControl>
-                                <Input placeholder="Enter your Street address" {...field} className="h-[50px]"/>
+                                <Input placeholder="Enter your Street address" {...field} className="h-[50px]" />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -171,7 +158,7 @@ function CheckoutBillingForm() {
                         <FormItem>
                             <FormLabel>Town/City</FormLabel>
                             <FormControl>
-                                <Input placeholder="Enter your Town or city" {...field} className="h-[50px]"/>
+                                <Input placeholder="Enter your Town or city" {...field} className="h-[50px]" />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -184,7 +171,7 @@ function CheckoutBillingForm() {
                         <FormItem>
                             <FormLabel>Province</FormLabel>
                             <FormControl>
-                                <Input placeholder="Enter your Province" {...field} className="h-[50px]"/>
+                                <Input placeholder="Enter your Province" {...field} className="h-[50px]" />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -192,12 +179,12 @@ function CheckoutBillingForm() {
                 />
                 <FormField
                     control={form.control}
-                    name="zipcode"
+                    name="zipCode"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>ZIP Code</FormLabel>
                             <FormControl>
-                                <Input placeholder="Enter your zip code" {...field} className="h-[50px]"/>
+                                <Input placeholder="Enter your zip code" {...field} className="h-[50px]" />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -210,7 +197,7 @@ function CheckoutBillingForm() {
                         <FormItem>
                             <FormLabel>Phone</FormLabel>
                             <FormControl>
-                                <Input placeholder="Enter your phone" {...field} className="h-[50px]"/>
+                                <Input placeholder="Enter your phone" {...field} className="h-[50px]" />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -223,7 +210,7 @@ function CheckoutBillingForm() {
                         <FormItem>
                             <FormLabel>Email address</FormLabel>
                             <FormControl>
-                                <Input placeholder="Enter your email address" {...field} className="h-[50px]"/>
+                                <Input placeholder="Enter your email address" {...field} className="h-[50px]" />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -236,7 +223,7 @@ function CheckoutBillingForm() {
                         <FormItem>
                             <FormLabel>Additional Information</FormLabel>
                             <FormControl>
-                                <Input placeholder="Additional Information" {...field} className="h-[50px]"/>
+                                <Input placeholder="Additional Information" {...field} className="h-[50px]" />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

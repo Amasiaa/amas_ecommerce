@@ -20,6 +20,7 @@
     "framer-motion": "^11.3.6",
     "jotai": "^2.9.1",
     "lucide-react": "^0.300.0",
+    "mongoose": "^8.6.0",
     "next": "14.0.4",
     "react": "^18",
     "react-dom": "^18",

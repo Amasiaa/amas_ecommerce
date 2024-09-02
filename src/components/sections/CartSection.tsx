@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import MainButton from '../common/MainButton';
 import { useAtom } from 'jotai';
 import { cartAtom } from '@/storage/jotai';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next-nprogress-bar';
 
 function CartSection({ toggleShowCart }: { toggleShowCart: () => void }) {
     const [products, setProducts] = useAtom(cartAtom);

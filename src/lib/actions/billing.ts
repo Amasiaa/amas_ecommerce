@@ -6,3 +6,13 @@ export async function saveBillingInfo(input: IBilling) {
     const billing = await BillingModel.create(input);
     return billing;
 }
+
+export async function updateBillingInfo(input: IBilling, billingId: string) {
+    await connectToDatabase();
+    await BillingModel.updateOne(
+        { _id: billingId, },
+        input
+    );
+    const billing = await BillingModel.findById(billingId);
+    return billing;
+} 

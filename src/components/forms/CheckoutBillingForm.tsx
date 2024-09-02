@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
-import { Button } from "@/components/ui/button"
 import {
     Form,
     FormControl,
@@ -22,15 +21,21 @@ import {
 } from "@/components/ui/select"
 
 import { Input } from "@/components/ui/input"
-import { toast } from "@/components/ui/use-toast"
 import Countries from "@/lib/json/countries.json";
 import { BillingInfoInputValidation } from "@/lib/validations"
 import makeApiCallService from "@/lib/service/apiService"
+import { useEffect, useState } from "react"
+import MainButton from "../common/MainButton"
+import { useAtom } from "jotai"
+import { billingAtom } from "@/storage/jotai"
 
 const FormSchema = BillingInfoInputValidation;
 
 
 function CheckoutBillingForm() {
+    const [isLoading, setIsLoading] = useState(false);
+    const [refreshKey, setRefreshKey] = useState(0);
+    const [billingInfo, setBillingInfo] = useAtom(billingAtom);
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
@@ -49,20 +54,56 @@ function CheckoutBillingForm() {
     })
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
-        const response = makeApiCallService("/api/billing", {
-            method: "POST",
-            body: data,
-        })
-        console.log(response);
-        // toast({
-        //     title: "You submitted the following values:",
-        //     description: (
-        //         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-        //             <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        //         </pre>
-        //     ),
-        // })
+        setIsLoading(true);
+        if (billingInfo) {
+            await makeApiCallService<IResponse>("/api/billing", {
+                method: "PUT",
+                body: { data, billingId: billingInfo?._id },
+            }).then((res) => {
+                // NOTE: Save ID into localStorage => Persisting state
+                setBillingInfo(res?.response?.data);
+                setIsLoading(false);
+            }).catch(() => {
+                setIsLoading(false);
+            });
+        } else {
+            await makeApiCallService<IResponse>("/api/billing", {
+                method: "POST",
+                body: data,
+            }).then((res) => {
+                // NOTE: Save ID into localStorage => Persisting state
+                setBillingInfo(res?.response?.data);
+                setIsLoading(false);
+            }).catch(() => {
+                setIsLoading(false);
+            });
+        }
+
+
     }
+
+    useEffect(() => {
+        async function fetchBillingInfo() {
+            console.log("~ fetch ~ billingInfo: ", billingInfo);
+            if (billingInfo) {
+                form.setValue("firstName", billingInfo?.firstName);
+                form.setValue("lastName", billingInfo?.lastName);
+                form.setValue("company", billingInfo?.company);
+                form.setValue("country", billingInfo?.country);
+                form.setValue("street", billingInfo?.street);
+                form.setValue("town", billingInfo?.town);
+                form.setValue("province", billingInfo?.province);
+                form.setValue("zipCode", billingInfo?.zipCode);
+                form.setValue("phone", billingInfo?.phone);
+                form.setValue("email", billingInfo?.email);
+                form.setValue("additionalInfo", billingInfo?.additionalInfo);
+                setRefreshKey(Math.random());
+            }
+
+        }
+
+        fetchBillingInfo();
+    }, [billingInfo]);
 
     return (
         <Form {...form}>
@@ -114,6 +155,7 @@ function CheckoutBillingForm() {
                     )}
                 />
                 <FormField
+                    key={refreshKey}
                     control={form.control}
                     name="country"
                     render={({ field }) => (
@@ -129,7 +171,9 @@ function CheckoutBillingForm() {
                                     </SelectTrigger>
                                     <SelectContent>
                                         {Countries.map((country, index) => (
-                                            <SelectItem key={index} value={country.code}>{country.name}</SelectItem>
+                                            <SelectItem key={index} value={country.name}>
+                                                {country.name}
+                                            </SelectItem>
                                         ))}
                                     </SelectContent>
                                 </Select>
@@ -229,7 +273,14 @@ function CheckoutBillingForm() {
                         </FormItem>
                     )}
                 />
-                <Button type="submit">Save Billing Info</Button>
+                <div className="mt-6">
+                    <MainButton
+                        text="Save Billing Info"
+                        isSubmitable
+                        isLoading={isLoading}
+                        classes="rounded-[15px] h-[55px]"
+                    />
+                </div>
             </form>
         </Form>
     )

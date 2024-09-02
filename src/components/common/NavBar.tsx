@@ -8,11 +8,12 @@ import { RemoveScroll } from "react-remove-scroll";
 import { useAtomValue } from "jotai";
 import { cartAtom } from "@/storage/jotai";
 import { Badge } from "../ui/badge";
+import { useRouter } from "next-nprogress-bar";
 
 function NavBar() {
   const [menu, setMenu] = useState(false);
   const [showCart, setshowCart] = useState(false);
-
+  const router = useRouter();
   const cartValue = useAtomValue(cartAtom);
   const links = [
     {
@@ -66,7 +67,7 @@ function NavBar() {
         {/* DESKTOP */}
         <div className=" hidden lg:block animate-in fade-in zoom-in bg-white p-4">
           <div className="flex justify-between mx-[41px] items-center">
-            <div>
+            <div className="cursor-pointer" onClick={() => router.push('/')}>
               <img src="/images/logo.png" alt="logo" />
             </div>
             <div className="flex gap-[20px] xl:gap-[50px] text-[16px] items-center select-none">

@@ -22,6 +22,7 @@
     "lucide-react": "^0.300.0",
     "mongoose": "^8.6.0",
     "next": "14.0.4",
+    "next-nprogress-bar": "^2.3.13",
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.52.1",
